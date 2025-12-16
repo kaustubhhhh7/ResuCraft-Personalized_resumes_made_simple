@@ -301,24 +301,24 @@ function App() {
         borderBottom: '1px solid rgba(203, 213, 225, 0.3)',
         boxShadow: '0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 16px rgba(15, 23, 42, 0.06)'
       }}>
-        <div className="max-w-[1920px] mx-auto px-6 lg:px-10 py-3.5">
-          <div className="flex items-center justify-between relative">
-            <div className="flex items-center gap-3 flex-1">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300" style={{
+        <div className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-10 py-2 sm:py-3.5">
+          <div className="flex items-center justify-between relative flex-wrap gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg transition-all duration-300" style={{
                 background: 'rgba(34, 197, 94, 0.06)',
                 border: '1px solid rgba(34, 197, 94, 0.12)'
               }}>
                 <div className="relative">
-                  <div className="h-2 w-2 rounded-full bg-green-500" style={{
+                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500" style={{
                     animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                   }} />
                 </div>
-                <span className="text-xs text-green-700 font-medium tracking-wide">Autosaved</span>
+                <span className="text-[10px] sm:text-xs text-green-700 font-medium tracking-wide hidden xs:inline">Autosaved</span>
               </div>
             </div>
             
-            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-              <h1 className="text-lg font-bold tracking-wide text-center" style={{
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden sm:block">
+              <h1 className="text-base sm:text-lg font-bold tracking-wide text-center" style={{
                 letterSpacing: '0.05em',
                 position: 'relative',
                 zIndex: 10,
@@ -336,9 +336,9 @@ function App() {
               </h1>
             </div>
             
-            <div className="flex items-center gap-2.5 flex-1 justify-end">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 flex-1 sm:flex-1 justify-end min-w-0">
               <button 
-                className="text-sm px-5 py-2.5 font-semibold rounded-xl transition-all duration-300 ease-out" 
+                className="text-xs sm:text-sm px-3 sm:px-5 py-1.5 sm:py-2.5 font-semibold rounded-xl transition-all duration-300 ease-out whitespace-nowrap" 
                 onClick={exportPdf}
                 style={{
                   background: 'linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%)',
@@ -363,7 +363,7 @@ function App() {
                 Download PDF
               </button>
               <button 
-                className="text-sm px-4 py-2.5 font-medium rounded-xl transition-all duration-300 ease-out" 
+                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center" 
                 onClick={() => saveDraft(user.username, resume)}
                 style={{
                   background: 'rgba(255, 255, 255, 0.95)',
@@ -388,7 +388,7 @@ function App() {
                 Save draft
               </button>
               <button 
-                className="text-sm px-4 py-2.5 font-medium rounded-xl transition-all duration-300 ease-out" 
+                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center" 
                 onClick={handleLogout}
                 style={{
                   background: 'rgba(255, 255, 255, 0.95)',
@@ -417,12 +417,12 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-[1920px] mx-auto px-6 lg:px-10 py-8 relative">
+      <main className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-10 py-4 sm:py-8 relative">
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{
           background: 'radial-gradient(circle at 20% 50%, rgba(34, 197, 94, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(22, 163, 74, 0.03) 0%, transparent 50%)'
         }} />
-        <div className="grid lg:grid-cols-[1.35fr_1fr] gap-8 items-start relative z-10">
-          <section className="space-y-5 sticky top-[4.5rem] self-start max-h-[calc(100vh-5.5rem)] overflow-y-auto overflow-x-hidden pr-3 custom-scrollbar">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-4 sm:gap-6 lg:gap-8 items-start relative z-10">
+          <section className="space-y-4 sm:space-y-5 lg:sticky lg:top-[4.5rem] self-start lg:max-h-[calc(100vh-5.5rem)] overflow-y-auto overflow-x-hidden pr-0 sm:pr-3 custom-scrollbar">
             <div className="section-card" style={{
               background: 'linear-gradient(135deg, rgba(220, 252, 231, 0.9) 0%, rgba(187, 247, 208, 0.85) 50%, rgba(134, 239, 172, 0.7) 100%)',
               borderColor: 'rgba(74, 222, 128, 0.3)',
@@ -449,7 +449,7 @@ function App() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
               <TemplateSelector value={template} onChange={setTemplate} />
               <div className="section-card">
                 <div className="mb-3">
@@ -528,23 +528,22 @@ function App() {
             </div>
           </section>
 
-          <section className="sticky-preview-section sticky top-[4.5rem] self-start" style={{
+          <section className="sticky-preview-section lg:sticky lg:top-[4.5rem] self-start w-full" style={{
             maxHeight: 'calc(100vh - 5.5rem)',
             display: 'flex',
-            flexDirection: 'column',
-            maxWidth: '95%'
+            flexDirection: 'column'
           }}>
-            <div className="section-card flex flex-col" style={{
+            <div className="section-card flex flex-col w-full" style={{
               maxHeight: 'calc(100vh - 5.5rem)',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              padding: '1rem'
+              padding: '0.75rem'
             }}>
-              <div className="mb-4 pb-4 border-b border-slate-200/50 flex-shrink-0">
-                <div className="flex items-center justify-between mb-1.5">
+              <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-slate-200/50 flex-shrink-0">
+                <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
                   <div>
-                    <h2 className="text-lg font-semibold tracking-tight" style={{ color: '#1e293b' }}>Live preview</h2>
+                    <h2 className="text-base sm:text-lg font-semibold tracking-tight" style={{ color: '#1e293b' }}>Live preview</h2>
                   </div>
                   <div className="flex items-center gap-1">
                     <button
@@ -624,23 +623,22 @@ function App() {
                     </button>
                   </div>
                 </div>
-                <p className="text-xs mt-1" style={{ color: '#64748b' }}>Changes update instantly as you type.</p>
+                <p className="text-[10px] sm:text-xs mt-1" style={{ color: '#64748b' }}>Changes update instantly as you type.</p>
               </div>
               <div
                 ref={previewContainerRef}
-                className="preview-container rounded-xl p-4 border flex-1"
+                className="preview-container rounded-xl p-2 sm:p-4 border flex-1"
                 style={{ 
                   background: 'linear-gradient(135deg, rgba(241, 245, 249, 0.6) 0%, rgba(226, 232, 240, 0.5) 100%)',
                   borderColor: 'rgba(203, 213, 225, 0.4)',
                   boxShadow: 'inset 0 2px 8px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.3) inset',
                   minHeight: 0,
-                  maxWidth: '90%',
+                  maxWidth: '100%',
                   margin: '0 auto',
                   display: 'flex',
                   alignItems: 'flex-start',
                   justifyContent: 'center',
                   position: 'relative',
-                  padding: '1rem 2rem 2rem 2rem',
                   overflow: 'auto',
                   overflowX: 'hidden'
                 }}

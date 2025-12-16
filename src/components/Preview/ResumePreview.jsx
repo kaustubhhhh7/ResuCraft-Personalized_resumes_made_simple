@@ -109,8 +109,8 @@ const ResumePreview = ({ data, template, order }) => {
           : 'template-classic'
 
   return (
-    <div className={`preview-page p-10 ${templateClass}`}>
-      <header className="flex items-start gap-4 pb-5 border-b border-slate-200">
+    <div className={`preview-page p-6 sm:p-8 lg:p-10 ${templateClass}`}>
+      <header className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-slate-200">
         {data.photo && (
           <div className="h-20 w-20 rounded-full overflow-hidden border border-slate-200">
             <img src={data.photo} alt="Profile" className="h-full w-full object-cover" />
