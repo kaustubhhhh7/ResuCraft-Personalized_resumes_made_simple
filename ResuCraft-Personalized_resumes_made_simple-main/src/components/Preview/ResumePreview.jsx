@@ -1,7 +1,7 @@
 const Section = ({ title, children }) => (
-  <div className="mb-10" style={{ display: 'block', clear: 'both' }}>
-    <h3 className="text-xl font-bold text-slate-900 border-b-2 border-slate-200 pb-1 mb-4 uppercase tracking-wider">{title}</h3>
-    <div className="text-sm leading-relaxed text-slate-800" style={{ display: 'block' }}>{children}</div>
+  <div className="mb-5" style={{ display: 'block', clear: 'both' }}>
+    <h3 className="text-lg font-bold text-slate-800 border-b border-slate-300 pb-1 mb-3 uppercase tracking-wider">{title}</h3>
+    <div className="text-sm leading-normal text-slate-700" style={{ display: 'block' }}>{children}</div>
   </div>
 )
 
@@ -33,13 +33,13 @@ const ResumePreview = ({ data, template, order }) => {
           <Section title="Experience">
             {data.experience.length ? (
               data.experience.map((item) => (
-                <div key={item.id} className="mb-6 last:mb-0" style={{ display: 'block' }}>
-                  <div className="flex justify-between items-start mb-2">
+                <div key={item.id} className="mb-3 last:mb-0" style={{ display: 'block' }}>
+                  <div className="flex justify-between items-baseline mb-1">
                     <div style={{ flex: '1' }}>
-                      <div className="font-bold text-slate-900 text-base">{item.role}</div>
-                      <div className="text-slate-600 font-medium italic">{item.company}</div>
+                      <div className="font-semibold text-slate-900 text-base">{item.role}</div>
+                      <div className="text-slate-600 text-sm font-medium">{item.company}</div>
                     </div>
-                    <div className="text-xs text-slate-500 font-bold whitespace-nowrap ml-4">
+                    <div className="text-xs text-slate-500 font-semibold whitespace-nowrap ml-4">
                       {item.start} — {item.end || 'Present'}
                     </div>
                   </div>
@@ -56,11 +56,11 @@ const ResumePreview = ({ data, template, order }) => {
           <Section title="Projects">
             {data.projects.length ? (
               data.projects.map((project) => (
-                <div key={project.id} className="mb-6 last:mb-0" style={{ display: 'block' }}>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="font-bold text-slate-900 text-base flex-1">{project.name}</div>
+                <div key={project.id} className="mb-3 last:mb-0" style={{ display: 'block' }}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <div className="font-semibold text-slate-900 text-base flex-1">{project.name}</div>
                     {project.link && (
-                      <div className="text-primary font-medium text-xs ml-4 truncate opacity-80" style={{ maxWidth: '200px' }}>
+                      <div className="text-primary font-medium text-xs ml-4 truncate" style={{ maxWidth: '200px' }}>
                         {project.link}
                       </div>
                     )}
@@ -78,13 +78,13 @@ const ResumePreview = ({ data, template, order }) => {
           <Section title="Education">
             {data.education.length ? (
               data.education.map((edu) => (
-                <div key={edu.id} className="mb-6 last:mb-0" style={{ display: 'block' }}>
-                  <div className="flex justify-between items-start mb-2">
+                <div key={edu.id} className="mb-3 last:mb-0" style={{ display: 'block' }}>
+                  <div className="flex justify-between items-baseline mb-1">
                     <div style={{ flex: '1' }}>
-                      <div className="font-bold text-slate-900 text-base">{edu.degree}</div>
-                      <div className="text-slate-600 font-medium italic">{edu.school}</div>
+                      <div className="font-semibold text-slate-900 text-base">{edu.degree}</div>
+                      <div className="text-slate-600 text-sm font-medium">{edu.school}</div>
                     </div>
-                    <div className="text-xs text-slate-500 font-bold whitespace-nowrap ml-4">
+                    <div className="text-xs text-slate-500 font-semibold whitespace-nowrap ml-4">
                       {edu.start} — {edu.end}
                     </div>
                   </div>
@@ -120,33 +120,33 @@ const ResumePreview = ({ data, template, order }) => {
         fontFamily: "'Inter', sans-serif"
       }}
     >
-      <header className="flex items-center pb-1 mb-2">
+      <header className="flex items-center pb-2 mb-4">
         {data.photo && (
-          <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-slate-100 flex-shrink-0 mr-8 shadow-sm">
+          <div className="h-28 w-28 rounded-full overflow-hidden border-4 border-slate-50 flex-shrink-0 mr-6 shadow-sm">
             <img src={data.photo} alt="Profile" className="h-full w-full object-cover" />
           </div>
         )}
         <div className="flex-1">
-          <h1 className="text-5xl font-black text-slate-900 mb-2 leading-none tracking-tighter uppercase">{data.personal.fullName || 'Your name'}</h1>
-          <p className="text-2xl text-slate-600 font-bold mb-4 tracking-wide border-b-2 border-slate-100 pb-2 inline-block">{data.personal.title || 'Title or focus'}</p>
-          <div className="flex flex-wrap text-xs text-slate-700 font-bold">
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-1 tracking-tight uppercase">{data.personal.fullName || 'Your name'}</h1>
+          <p className="text-lg text-slate-600 font-semibold mb-3 tracking-wide">{data.personal.title || 'Title or focus'}</p>
+          <div className="flex flex-wrap text-sm text-slate-600 font-medium">
             {data.personal.email && (
-              <div className="flex items-center mr-6 mb-2">
+              <div className="flex items-center mr-5 mb-1">
                 {data.personal.email}
               </div>
             )}
             {data.personal.phone && (
-              <div className="flex items-center mr-6 mb-2">
+              <div className="flex items-center mr-5 mb-1">
                 {data.personal.phone}
               </div>
             )}
             {data.personal.location && (
-              <div className="flex items-center mr-6 mb-2">
+              <div className="flex items-center mr-5 mb-1">
                 {data.personal.location}
               </div>
             )}
             {data.personal.website && (
-              <div className="flex items-center mr-6 mb-2">
+              <div className="flex items-center mr-5 mb-1">
                 {data.personal.website}
               </div>
             )}

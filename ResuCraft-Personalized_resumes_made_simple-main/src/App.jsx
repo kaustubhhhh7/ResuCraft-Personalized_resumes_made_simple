@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster, toast } from 'react-hot-toast'
 import LoginRegister from './components/Auth/LoginRegister'
 import ResumeForm from './components/Editor/ResumeForm'
@@ -50,6 +51,7 @@ function App() {
   const [order, setOrder] = useState(defaultOrder)
   const [zoom, setZoom] = useState(100)
   const [autoScale, setAutoScale] = useState(1)
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null)
 
   const zoomLevels = [50, 75, 100, 125, 150]
   const currentZoomIndex = zoomLevels.indexOf(zoom)
@@ -127,7 +129,7 @@ function App() {
     const calculateAutoScale = () => {
       const container = previewContainerRef.current
       const content = previewRef.current
-      
+
       if (!container || !content) {
         // Retry if elements aren't ready yet
         if (retryCount < maxRetries) {
@@ -265,8 +267,32 @@ function App() {
     const target = idx + direction
     if (target < 0 || target >= order.length) return
     const next = [...order]
-    ;[next[idx], next[target]] = [next[target], next[idx]]
+      ;[next[idx], next[target]] = [next[target], next[idx]]
     setOrder(next)
+  }
+
+  const handleDragStart = (e, index) => {
+    setDraggedItemIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+    // Set a ghost image or just let default handle it
+    e.currentTarget.style.opacity = '0.5'
+  }
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault()
+    if (draggedItemIndex === null || draggedItemIndex === index) return
+
+    const newOrder = [...order]
+    const item = newOrder.splice(draggedItemIndex, 1)[0]
+    newOrder.splice(index, 0, item)
+
+    setDraggedItemIndex(index)
+    setOrder(newOrder)
+  }
+
+  const handleDragEnd = (e) => {
+    e.currentTarget.style.opacity = '1'
+    setDraggedItemIndex(null)
   }
 
   const howItWorks = useMemo(
@@ -316,7 +342,7 @@ function App() {
                 <span className="text-[10px] sm:text-xs text-green-700 font-medium tracking-wide hidden xs:inline">Autosaved</span>
               </div>
             </div>
-            
+
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden sm:block">
               <h1 className="text-base sm:text-lg font-bold tracking-wide text-center" style={{
                 letterSpacing: '0.05em',
@@ -335,10 +361,10 @@ function App() {
                 <span style={{ color: '#000000' }} className="ml-1">CRAFT</span>
               </h1>
             </div>
-            
+
             <div className="flex items-center gap-1.5 sm:gap-2.5 flex-1 sm:flex-1 justify-end min-w-0">
-              <button 
-                className="text-xs sm:text-sm px-3 sm:px-5 py-1.5 sm:py-2.5 font-semibold rounded-xl transition-all duration-300 ease-out whitespace-nowrap" 
+              <button
+                className="text-xs sm:text-sm px-3 sm:px-5 py-1.5 sm:py-2.5 font-semibold rounded-xl transition-all duration-300 ease-out whitespace-nowrap"
                 onClick={exportPdf}
                 style={{
                   background: 'linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%)',
@@ -362,8 +388,8 @@ function App() {
               >
                 Download PDF
               </button>
-              <button 
-                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center" 
+              <button
+                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center"
                 onClick={() => saveDraft(user.username, resume)}
                 style={{
                   background: 'rgba(255, 255, 255, 0.95)',
@@ -387,8 +413,8 @@ function App() {
               >
                 Save draft
               </button>
-              <button 
-                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center" 
+              <button
+                className="text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2.5 font-medium rounded-xl transition-all duration-300 ease-out hidden sm:inline-flex items-center justify-center"
                 onClick={handleLogout}
                 style={{
                   background: 'rgba(255, 255, 255, 0.95)',
@@ -440,7 +466,7 @@ function App() {
               <div className="w-full h-2.5 rounded-full overflow-hidden shadow-inner" style={{ background: 'rgba(203, 213, 225, 0.3)' }}>
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out"
-                  style={{ 
+                  style={{
                     width: `${calculateCompleteness(resume)}%`,
                     background: 'linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #15803d 100%)',
                     boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.3)',
@@ -457,51 +483,69 @@ function App() {
                   <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>Reorder sections to customize resume flow.</p>
                 </div>
                 <div className="space-y-2">
-                  {order.map((item, idx) => (
-                    <div
-                      key={item}
-                      className="flex items-center justify-between rounded-lg border border-slate-200/50 px-3 py-2.5 transition-all duration-200"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.95) 100%)',
-                        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.6) inset'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = '0 4px 10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.7) inset'
-                        e.currentTarget.style.transform = 'translateY(-1px)'
-                        e.currentTarget.style.borderColor = 'rgba(203, 213, 225, 0.8)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = '0 1px 3px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.6) inset'
-                        e.currentTarget.style.transform = 'translateY(0)'
-                        e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.5)'
-                      }}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-slate-300 text-sm select-none" title="Drag handle">⋮⋮</span>
-                        <span className="capitalize font-medium text-sm text-slate-800 tracking-tight">{item}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          className="btn-secondary text-xs px-1.5 py-1 h-7 w-7 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
-                          onClick={() => moveSection(idx, -1)}
-                          disabled={idx === 0}
-                          title="Move up"
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-secondary text-xs px-1.5 py-1 h-7 w-7 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
-                          onClick={() => moveSection(idx, 1)}
-                          disabled={idx === order.length - 1}
-                          title="Move down"
-                        >
-                          ↓
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                  <AnimatePresence>
+                    {order.map((item, idx) => (
+                      <motion.div
+                        key={item}
+                        layout
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, idx)}
+                        onDragOver={(e) => handleDragOver(e, idx)}
+                        onDragEnd={handleDragEnd}
+                        className={`flex items-center justify-between rounded-lg border px-3 py-2.5 transition-colors duration-200 cursor-grab active:cursor-grabbing ${draggedItemIndex === idx ? 'border-primary bg-primary/5' : 'border-slate-200/50'
+                          }`}
+                        style={{
+                          background: draggedItemIndex === idx
+                            ? 'rgba(34, 197, 94, 0.05)'
+                            : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.95) 100%)',
+                          boxShadow: draggedItemIndex === idx
+                            ? '0 8px 16px rgba(34, 197, 94, 0.1)'
+                            : '0 1px 3px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.6) inset'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (draggedItemIndex !== null) return
+                          e.currentTarget.style.boxShadow = '0 4px 10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.7) inset'
+                          e.currentTarget.style.transform = 'translateY(-1px)'
+                          e.currentTarget.style.borderColor = 'rgba(203, 213, 225, 0.8)'
+                        }}
+                        onMouseLeave={(e) => {
+                          if (draggedItemIndex !== null) return
+                          e.currentTarget.style.boxShadow = '0 1px 3px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.6) inset'
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.5)'
+                        }}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-slate-400 hover:text-slate-600 text-sm select-none cursor-move transition-colors" title="Drag to reorder">⋮⋮</span>
+                          <span className="capitalize font-medium text-sm text-slate-800 tracking-tight">{item}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            className="btn-secondary text-xs px-1.5 py-1 h-7 w-7 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+                            onClick={() => moveSection(idx, -1)}
+                            disabled={idx === 0}
+                            title="Move up"
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-secondary text-xs px-1.5 py-1 h-7 w-7 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+                            onClick={() => moveSection(idx, 1)}
+                            disabled={idx === order.length - 1}
+                            title="Move down"
+                          >
+                            ↓
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -628,7 +672,7 @@ function App() {
               <div
                 ref={previewContainerRef}
                 className="preview-container rounded-xl p-2 sm:p-4 border flex-1"
-                style={{ 
+                style={{
                   background: 'linear-gradient(135deg, rgba(241, 245, 249, 0.6) 0%, rgba(226, 232, 240, 0.5) 100%)',
                   borderColor: 'rgba(203, 213, 225, 0.4)',
                   boxShadow: 'inset 0 2px 8px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.3) inset',
