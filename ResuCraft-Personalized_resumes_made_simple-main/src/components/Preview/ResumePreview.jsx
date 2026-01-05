@@ -6,7 +6,7 @@ const Section = ({ title, children }) => (
 )
 
 const Pill = ({ children }) => (
-  <div className="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded text-xs font-bold mr-2 mb-2 border border-slate-200">
+  <div className="inline-flex items-center justify-center bg-slate-100 text-slate-700 px-3 py-1.5 rounded text-xs font-bold mr-2 mb-2 border border-slate-200 leading-none" style={{ minWidth: '30px', verticalAlign: 'middle' }}>
     {children}
   </div>
 )

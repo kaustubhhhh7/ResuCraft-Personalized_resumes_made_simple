@@ -51,6 +51,12 @@ export const exportToPDF = async (node, filename = 'resume.pdf') => {
   const textNodes = clone.querySelectorAll('*')
   textNodes.forEach(el => {
     el.style.textRendering = 'geometricPrecision'
+    // Critical fix: 'truncate' uses overflow:hidden which vertically clips text 
+    // in html2canvas if the font rendering baseline differs slightly.
+    if (el.classList.contains('truncate') || el.style.overflow === 'hidden') {
+      el.style.overflow = 'visible'
+      el.style.textOverflow = 'clip'
+    }
   })
 
   try {
@@ -69,6 +75,14 @@ export const exportToPDF = async (node, filename = 'resume.pdf') => {
           clonedNode.style.height = 'auto'
           clonedNode.style.minHeight = '1123px'
           clonedNode.style.overflow = 'visible'
+
+          // Double safety: layout shifts might happen, ensure links are visible
+          const links = clonedNode.querySelectorAll('a, .text-primary')
+          links.forEach(l => {
+            l.style.display = 'inline-block' // Helps with vertical bounds
+            l.style.lineHeight = '1.2' // slight boost
+            l.style.overflow = 'visible'
+          })
         }
       }
     })
